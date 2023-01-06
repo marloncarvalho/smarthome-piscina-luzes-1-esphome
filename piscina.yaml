@@ -15,11 +15,42 @@ api:
 
 logger:
 
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: ESP IP Address
+    ssid:
+      name: ESP Connected SSID
+    bssid:
+      name: ESP Connected BSSID
+    mac_address:
+      name: ESP Mac Wifi Address
+    scan_results:
+      name: ESP Latest Scan Results
+
 ota:
   safe_mode: true
   password: animal
   
 captive_portal:
+
+sensor:
+  - platform: uptime
+    name: Uptime Sensor
+    update_interval: 10s
+    
+  - platform: wifi_signal
+    id: wifi_signal_db
+    name: "WiFi Signal Sensor"
+    update_interval: 10s
+
+  - platform: copy # Reports the WiFi signal strength in %
+    source_id: wifi_signal_db
+    name: "WiFi Signal Percent"
+    filters:
+      - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
+    unit_of_measurement: "Signal %"
+    entity_category: "diagnostic"
 
 switch:
   - platform: gpio
